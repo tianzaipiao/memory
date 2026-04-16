@@ -150,24 +150,25 @@ class ShortTermMemory:
     
     def _convert_oldest_full_to_summary(self):
         """将最旧的全文记忆转换为摘要"""
-        # 找到最旧的全文记忆（从后往前找第6条之后的）
-        full_indices = [i for i, m in enumerate(self.memories) if m.memory_type == "full"]
+        # 策略：始终保持前5条记忆为全文，第6条及以后为摘要
+        # 由于新记忆插入在开头(索引0)，所以索引0-4应该是full，索引5+应该是summary
         
-        # 如果全文记忆超过5条，将最旧的一条转为摘要
-        if len(full_indices) > self.full_count:
-            oldest_full_idx = full_indices[-(self.full_count + 1)]  # 第6条（倒数第6个全文）
-            oldest = self.memories[oldest_full_idx]
-            
-            # 生成摘要
-            summary_text = generate_summary(oldest.user_msg or "", oldest.assistant_msg or "")
-            
-            # 转换为摘要类型
-            self.memories[oldest_full_idx] = MemoryEntry(
-                timestamp=oldest.timestamp,
-                memory_type="summary",
-                summary=summary_text
-            )
-            print(f"[SHORT_TERM] 将 [{oldest.timestamp}] 的全文记忆转换为摘要")
+        # 检查索引5及以后的记忆，将其中是full的转为summary
+        for i in range(self.full_count, len(self.memories)):
+            if self.memories[i].memory_type == "full":
+                oldest = self.memories[i]
+                
+                # 生成摘要
+                summary_text = generate_summary(oldest.user_msg or "", oldest.assistant_msg or "")
+                
+                # 转换为摘要类型
+                self.memories[i] = MemoryEntry(
+                    timestamp=oldest.timestamp,
+                    memory_type="summary",
+                    summary=summary_text
+                )
+                print(f"[SHORT_TERM] 将 [{oldest.timestamp}] 的全文记忆转换为摘要")
+                break  # 每次只转换一条
     
     def add(self, user_msg: str, assistant_msg: str) -> Optional[MemoryEntry]:
         """
