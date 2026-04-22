@@ -61,21 +61,31 @@ def agent_node(state: HarnessState) -> dict:
     """
     模型推理节点：
     1. 根据用户输入召回相关记忆
-    2. 组装系统提示（含记忆上下文）
+    2. 组装消息列表（系统提示 → 用户输入+记忆上下文）
     3. 模型推理
     """
     user_input = state["user_input"]
     
-    # 获取包含记忆上下文的系统提示
-    system = SystemMessage(content=get_system_prompt(user_input))
-    messages = [system] + state["messages"]
+    # 获取分离的系统提示和记忆上下文
+    system_prompt, memory_context = get_system_prompt(user_input)
+    
+    # 构建用户消息内容：用户输入 + 记忆上下文
+    user_content = user_input
+    if memory_context:
+        user_content = f"{user_input}\n\n【相关记忆上下文】\n{memory_context}"
+    
+    # 组装消息：系统提示 → 用户输入（含记忆）
+    messages = [
+        SystemMessage(content=system_prompt),
+        HumanMessage(content=user_content)
+    ]
 
     print(f"\n[HARNESS] Step {state['step_count'] + 1}/{config.MAX_STEPS} — Agent thinking...")
     response = llm.invoke(messages)
 
     return {
         "messages": [response],
-        "step_count": state["step_count"] + 1,
+        "step_count": state['step_count'] + 1,
     }
 
 
