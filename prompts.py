@@ -13,7 +13,7 @@ v3.2 更新：系统提示从外部markdown文件加载
 
 from pathlib import Path
 
-from memory import build_context_with_memory, get_memory_stats
+from memory import build_context_with_memory, build_context_with_memory_detailed, get_memory_stats
 
 # System_Prompt 目录路径
 SYSTEM_PROMPT_DIR = Path(__file__).parent / "System_Prompt"
@@ -58,27 +58,29 @@ def load_system_prompt_base() -> str:
     return "\n\n".join(parts)
 
 
-def get_system_prompt(user_input: str = "") -> tuple[str, str]:
+def get_system_prompt(user_input: str = "") -> tuple[str, str, list[dict]]:
     """
-    组装系统提示和记忆上下文，返回分离的两部分。
+    组装系统提示和记忆上下文，返回分离的两部分和向量库数据。
 
     结构：
     1. 基础系统提示（从外部markdown文件加载）
     2. 记忆上下文（相关历史记忆 + 近期对话记忆）
+    3. 向量库召回的原始数据（用于日志记录）
 
     Args:
         user_input: 当前用户输入，用于召回相关记忆
 
     Returns:
-        (system_prompt, memory_context) 元组
+        (system_prompt, memory_context, vector_memories) 元组
     """
     # 从外部文件加载系统提示
     system_prompt = load_system_prompt_base()
     
-    # 构建记忆上下文（不含系统提示）
+    # 构建记忆上下文（不含系统提示），同时获取向量库数据
     memory_context = ""
+    vector_memories = []
     if user_input:
-        memory_context = build_context_with_memory(user_input)
+        memory_context, vector_memories = build_context_with_memory_detailed(user_input)
     
     # 打印记忆统计信息
     stats = get_memory_stats()
@@ -86,7 +88,7 @@ def get_system_prompt(user_input: str = "") -> tuple[str, str]:
         short_term_stats = stats['short_term']
         print(f"[HARNESS] 记忆加载: 短期摘要{short_term_stats['summary']}条, 长期记忆{stats['long_term_count']}条")
     
-    return system_prompt, memory_context
+    return system_prompt, memory_context, vector_memories
 
 
 def get_simple_system_prompt() -> str:

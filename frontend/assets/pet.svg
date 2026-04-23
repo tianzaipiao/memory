@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景透明 -->
+  <defs>
+    <radialGradient id="bodyGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FFB74D"/>
+      <stop offset="100%" style="stop-color:#FF9800"/>
+    </radialGradient>
+    <radialGradient id="faceGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FFF8E7"/>
+      <stop offset="100%" style="stop-color:#FFE0B2"/>
+    </radialGradient>
+  </defs>
+
+  <!-- 身体 -->
+  <ellipse cx="128" cy="148" rx="100" ry="90" fill="url(#bodyGradient)"/>
+
+  <!-- 左耳朵 -->
+  <polygon points="58,98 38,48 88,68" fill="#FFA726"/>
+
+  <!-- 右耳朵 -->
+  <polygon points="198,98 218,48 168,68" fill="#FFA726"/>
+
+  <!-- 脸部 -->
+  <ellipse cx="128" cy="138" rx="70" ry="65" fill="url(#faceGradient)"/>
+
+  <!-- 左眼 -->
+  <circle cx="98" cy="118" r="12" fill="#333333"/>
+  <circle cx="102" cy="114" r="4" fill="white"/>
+
+  <!-- 右眼 -->
+  <circle cx="158" cy="118" r="12" fill="#333333"/>
+  <circle cx="162" cy="114" r="4" fill="white"/>
+
+  <!-- 鼻子 -->
+  <polygon points="128,148 120,158 136,158" fill="#FF8A65"/>
+
+  <!-- 嘴巴 -->
+  <path d="M 108 165 Q 128 175 148 165" stroke="#333333" stroke-width="2" fill="none"/>
+
+  <!-- 左腮红 -->
+  <ellipse cx="78" cy="153" rx="15" ry="12" fill="#FFCDD2" opacity="0.7"/>
+
+  <!-- 右腮红 -->
+  <ellipse cx="178" cy="153" rx="15" ry="12" fill="#FFCDD2" opacity="0.7"/>
+</svg>

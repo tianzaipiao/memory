@@ -34,6 +34,7 @@ from typing_extensions import TypedDict
 import config
 from memory import save_conversation_with_memory, get_memory_stats
 from prompts import get_system_prompt
+from logger import log_query_with_memory
 
 
 # ──────────────────────────────────────────────────
@@ -66,8 +67,15 @@ def agent_node(state: HarnessState) -> dict:
     """
     user_input = state["user_input"]
     
-    # 获取分离的系统提示和记忆上下文
-    system_prompt, memory_context = get_system_prompt(user_input)
+    # 获取分离的系统提示、记忆上下文和向量库数据
+    system_prompt, memory_context, vector_memories = get_system_prompt(user_input)
+    
+    # 记录用户提问和向量库召回内容到日志
+    log_query_with_memory(
+        user_input=user_input,
+        vector_memories=vector_memories,
+        step_count=state['step_count']
+    )
     
     # 构建用户消息内容：用户输入 + 记忆上下文
     user_content = user_input

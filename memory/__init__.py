@@ -90,7 +90,26 @@ def build_context_with_memory(user_input: str) -> str:
     Returns:
         格式化后的上下文文本
     """
+    context, _ = build_context_with_memory_detailed(user_input)
+    return context
+
+
+def build_context_with_memory_detailed(user_input: str) -> tuple[str, list[dict]]:
+    """
+    构建包含记忆的上下文，并返回向量库召回的详细数据。
+    
+    返回的上下文结构：
+    1. 相关历史记忆（从向量数据库召回，经过重排序和阈值过滤）
+    2. 近期对话记忆（最近5条全文 + 5条AI摘要）
+    
+    Args:
+        user_input: 当前用户输入
+        
+    Returns:
+        (格式化后的上下文文本, 向量库召回的记忆列表)
+    """
     parts = []
+    vector_memories = []
     
     # 1. 从长期记忆中召回相关内容（带重排序）
     ltm = get_long_term_memory()
@@ -103,11 +122,25 @@ def build_context_with_memory(user_input: str) -> str:
             ranked_memories = rerank_memories(user_input, candidates, top_k=10, final_k=5)
             if ranked_memories:
                 parts.append(format_ranked_memories(ranked_memories))
+                # 提取向量库记忆数据用于日志
+                for item in ranked_memories:
+                    vector_memories.append({
+                        "timestamp": item.record.timestamp,
+                        "text": item.record.text,
+                        "score": item.final_score
+                    })
     except ImportError:
         # 如果reranker模块不存在，使用普通搜索
         related_memories = ltm.search(user_input, top_k=5)
         if related_memories:
             parts.append(ltm.format_for_prompt(related_memories))
+            # 提取向量库记忆数据用于日志
+            for record in related_memories:
+                vector_memories.append({
+                    "timestamp": record.timestamp,
+                    "text": record.text,
+                    "distance": record.distance
+                })
     
     # 2. 添加短期记忆
     stm = get_short_term_memory()
@@ -115,7 +148,7 @@ def build_context_with_memory(user_input: str) -> str:
     if short_term_text:
         parts.append(short_term_text)
     
-    return "\n\n".join(parts)
+    return "\n\n".join(parts), vector_memories
 
 
 def get_memory_stats() -> dict:
