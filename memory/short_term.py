@@ -85,17 +85,25 @@ class MemoryEntry:
             return f"{index}. [{self.timestamp}] [摘要] {self.summary}"
 
 
-def generate_summary(user_msg: str, assistant_msg: str) -> str:
+def generate_summary(user_msg: str, assistant_msg: str, verbose: bool = False) -> str:
     """
     使用AI模型生成对话摘要
     
     Args:
         user_msg: 用户消息
         assistant_msg: 助手回复
+        verbose: 是否打印日志（后台线程应设为 False）
         
     Returns:
         对话摘要（150字以内）
     """
+    # 如果消息为空，直接返回简单摘要
+    if not user_msg or not assistant_msg:
+        return f"用户询问: {user_msg[:100] if user_msg else '未知内容'}..."
+    
+    # 简单摘要作为 fallback
+    simple_summary = f"用户询问: {user_msg[:100]}..."
+    
     extract_prompt = f"""你是一个记忆提取助手。
 
 根据本次会话内容，提取一句简洁的总结（最多150字），包含以下信息：
@@ -113,12 +121,23 @@ def generate_summary(user_msg: str, assistant_msg: str) -> str:
 
     try:
         llm = config.get_llm(config.MEMORY_MODEL)
+        
+        # 直接调用，不嵌套线程池（避免死锁）
+        # 依赖 LLM 自身的超时设置
         response = llm.invoke([HumanMessage(content=extract_prompt)])
-        summary = response.content.strip()
-        return summary
+        summary = response.content.strip() if hasattr(response, 'content') else str(response)
+        
+        # 限制长度
+        if len(summary) > 200:
+            summary = summary[:200] + "..."
+        
+        return summary if summary else simple_summary
+        
     except Exception as e:
         # 如果生成失败，使用简单截断
-        return f"用户询问: {user_msg[:100]}..."
+        if verbose:
+            print(f"[SHORT_TERM] 生成摘要失败，使用简单摘要: {e}")
+        return simple_summary
 
 
 class ShortTermMemory:
@@ -148,7 +167,7 @@ class ShortTermMemory:
         with open(MEMORY_FILE, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
     
-    def _convert_oldest_full_to_summary(self):
+    def _convert_oldest_full_to_summary(self, verbose: bool = False):
         """将最旧的全文记忆转换为摘要"""
         # 策略：始终保持前5条记忆为全文，第6条及以后为摘要
         # 由于新记忆插入在开头(索引0)，所以索引0-4应该是full，索引5+应该是summary
@@ -158,8 +177,8 @@ class ShortTermMemory:
             if self.memories[i].memory_type == "full":
                 oldest = self.memories[i]
                 
-                # 生成摘要
-                summary_text = generate_summary(oldest.user_msg or "", oldest.assistant_msg or "")
+                # 生成摘要（后台线程不打印日志）
+                summary_text = generate_summary(oldest.user_msg or "", oldest.assistant_msg or "", verbose=verbose)
                 
                 # 转换为摘要类型
                 self.memories[i] = MemoryEntry(
@@ -167,10 +186,11 @@ class ShortTermMemory:
                     memory_type="summary",
                     summary=summary_text
                 )
-                print(f"[SHORT_TERM] 将 [{oldest.timestamp}] 的全文记忆转换为摘要")
+                if verbose:
+                    print(f"[SHORT_TERM] 将 [{oldest.timestamp}] 的全文记忆转换为摘要")
                 break  # 每次只转换一条
     
-    def add(self, user_msg: str, assistant_msg: str) -> Optional[MemoryEntry]:
+    def add(self, user_msg: str, assistant_msg: str, verbose: bool = False) -> Optional[MemoryEntry]:
         """
         添加新对话到短期记忆
         
@@ -182,6 +202,7 @@ class ShortTermMemory:
         Args:
             user_msg: 用户消息
             assistant_msg: 助手回复
+            verbose: 是否打印日志（后台线程应设为 False）
             
         Returns:
             如果超过10轮，返回最早的一条（需要移入长期记忆）
@@ -200,14 +221,15 @@ class ShortTermMemory:
         # 插入到开头（最新的在前面）
         self.memories.insert(0, new_entry)
         
-        # 检查是否需要转换旧的全文为摘要
-        self._convert_oldest_full_to_summary()
+        # 检查是否需要转换旧的全文为摘要（后台线程不打印日志）
+        self._convert_oldest_full_to_summary(verbose=verbose)
         
         # 检查是否超过上限
         evicted = None
         if len(self.memories) > self.max_rounds:
             evicted = self.memories.pop()  # 移除最旧的一条
-            print(f"[SHORT_TERM] 记忆超过{self.max_rounds}条，将 [{evicted.timestamp}] 移入长期记忆")
+            if verbose:
+                print(f"[SHORT_TERM] 记忆超过{self.max_rounds}条，将 [{evicted.timestamp}] 移入长期记忆")
         
         self.save()
         return evicted

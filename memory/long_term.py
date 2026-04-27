@@ -100,19 +100,24 @@ class LongTermMemory:
         # 生成唯一ID
         memory_id = str(uuid.uuid4())
         
-        # 获取向量
-        embedding = get_embedder().embed(text)
-        
-        # 存入 Chroma
-        collection = self._get_collection()
-        collection.add(
-            ids=[memory_id],
-            embeddings=[embedding],
-            documents=[text],
-            metadatas=[{
-                "timestamp": timestamp,
-            }]
-        )
+        try:
+            # 直接调用向量化（依赖 embedder 自身的超时设置）
+            embedding = get_embedder().embed(text)
+            
+            # 存入 Chroma
+            collection = self._get_collection()
+            collection.add(
+                ids=[memory_id],
+                embeddings=[embedding],
+                documents=[text],
+                metadatas=[{
+                    "timestamp": timestamp,
+                }]
+            )
+            
+        except Exception as e:
+            # 静默失败，不影响主流程
+            pass
         
         return memory_id
     

@@ -3,10 +3,9 @@
 ==============
 处理消息队列中的任务，支持流式生成和后台存储。
 
-功能:
-    - 消费消息队列
-    - 流式生成AI响应
-    - 后台执行记忆存储
+v3.3 更新：支持 Tool-based Memory 架构
+- AI 自主判断是否需要调用记忆工具
+- 支持流式生成和后台存储
 """
 
 import asyncio
@@ -19,21 +18,23 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 
 import config
-from harness import build_harness, HarnessState
 from memory import save_conversation_with_memory
-from prompts import get_system_prompt
+from prompts import get_system_prompt_with_memory_tool
+from tools.memory_tool import get_memory_tool, MemoryTool
 from backend.session_manager import session_manager, ConversationStatus, PendingMessage
 
 
 class StreamingProcessor:
     """
-    流式处理器
+    流式处理器（v3.3 Tool-based 版本）
     
     处理单条消息，支持流式生成响应。
+    新特性：AI 自主判断是否需要调用记忆工具
     """
     
     def __init__(self):
         self.llm = config.get_llm(config.MAIN_MODEL)
+        self.memory_tool = get_memory_tool()
     
     async def process_stream(
         self, 
@@ -41,51 +42,95 @@ class StreamingProcessor:
         message: str
     ) -> AsyncGenerator[str, None]:
         """
-        流式处理消息
+        流式处理消息（两阶段推理）
+        
+        流程：
+        1. 首次推理：系统提示 + 用户输入
+        2. 检查 AI 是否请求调用 memory_search
+        3. 如需要：召回记忆 → 二次推理
+        4. 流式返回结果
         
         Yields:
             生成的文本片段
         """
-        # 获取系统提示和记忆上下文
-        system_prompt, memory_context, vector_memories = get_system_prompt(message)
+        # 获取包含 Tool 说明的系统提示
+        system_prompt = get_system_prompt_with_memory_tool()
         
-        # 构建用户消息内容
-        user_content = message
-        if memory_context:
-            user_content = f"{message}\n\n【相关记忆上下文】\n{memory_context}"
-        
-        # 组装消息
-        messages = [
+        # 第一阶段：让 AI 判断是否需要记忆
+        first_messages = [
             SystemMessage(content=system_prompt),
-            HumanMessage(content=user_content)
+            HumanMessage(content=message)
         ]
         
-        # 流式调用
-        full_response = ""
         try:
-            # 使用 astream 方法进行流式调用
-            async for chunk in self.llm.astream(messages):
-                content = chunk.content if hasattr(chunk, 'content') else str(chunk)
-                if content:
-                    full_response += content
-                    yield content
+            # 非流式首次调用（用于判断是否需要记忆）
+            first_response = self.llm.invoke(first_messages)
+            first_text = first_response.content if hasattr(first_response, 'content') else str(first_response)
+            
+            # 检查是否包含 tool_call
+            tool_query = MemoryTool.parse_tool_call(first_text)
+            
+            if tool_query:
+                print(f"[TaskProcessor] AI 请求调用记忆工具: {tool_query.reason}")
+                print(f"[TaskProcessor] 搜索关键词: {tool_query.query}")
+                
+                # 执行记忆召回
+                memory_result = self.memory_tool.invoke(tool_query.query, top_k=5)
+                memory_context = memory_result.formatted_text
+                
+                # 第二阶段：带记忆的流式推理
+                user_content_with_memory = f"{message}\n\n【相关记忆上下文】\n{memory_context}"
+                second_messages = [
+                    SystemMessage(content=system_prompt),
+                    HumanMessage(content=user_content_with_memory)
+                ]
+                
+                # 流式生成最终响应
+                full_response = ""
+                async for chunk in self.llm.astream(second_messages):
+                    content = chunk.content if hasattr(chunk, 'content') else str(chunk)
+                    if content:
+                        full_response += content
+                        yield content
+                
+                # 后台保存记忆
+                asyncio.create_task(
+                    self._save_memory_background(user_id, message, full_response)
+                )
+                
+            else:
+                # 不需要记忆，直接流式返回首次响应
+                print("[TaskProcessor] 无需记忆，直接回答")
+                clean_text = MemoryTool.remove_tool_call_markup(first_text)
+                
+                # 由于首次调用是非流式的，这里直接返回
+                yield clean_text
+                
+                # 后台保存记忆
+                asyncio.create_task(
+                    self._save_memory_background(user_id, message, clean_text)
+                )
+                
         except Exception as e:
-            print(f"[StreamingProcessor] 流式生成错误: {e}")
-            # 如果流式失败，尝试非流式
+            print(f"[StreamingProcessor] 处理错误: {e}")
+            # 如果失败，尝试简化流程
             try:
-                print("[StreamingProcessor] 尝试非流式调用...")
-                response = self.llm.invoke(messages)
+                print("[StreamingProcessor] 尝试简化流程...")
+                simple_messages = [
+                    SystemMessage(content=system_prompt),
+                    HumanMessage(content=message)
+                ]
+                response = self.llm.invoke(simple_messages)
                 content = response.content if hasattr(response, 'content') else str(response)
-                full_response = content
                 yield content
+                
+                # 后台保存记忆
+                asyncio.create_task(
+                    self._save_memory_background(user_id, message, content)
+                )
             except Exception as e2:
-                print(f"[StreamingProcessor] 非流式调用也失败: {e2}")
+                print(f"[StreamingProcessor] 简化流程也失败: {e2}")
                 raise
-        
-        # 完成后，启动后台任务保存记忆
-        asyncio.create_task(
-            self._save_memory_background(user_id, message, full_response)
-        )
     
     async def _save_memory_background(self, user_id: str, user_message: str, assistant_reply: str):
         """后台保存记忆（在单独线程中执行，不阻塞事件循环）"""

@@ -34,3 +34,13 @@ typing-extensions==4.15.0
 
 # 可选：图片生成 (用于生成宠物图片)
 # Pillow==10.4.0
+
+# 本地模型支持（用于 Rerank 和本地嵌入）
+# =====================================
+# 注意：PyTorch 安装请根据 CUDA 版本选择：
+# - CPU 版本: pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+# - CUDA 11.8: pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+# - CUDA 12.1: pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+torch>=2.0.0
+transformers>=4.40.0
+sentence-transformers>=2.7.0

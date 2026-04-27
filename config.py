@@ -89,6 +89,8 @@ def get_llm(model: str):
         model=model,
         api_key=OPENAI_COMPATIBLE_API_KEY,
         base_url=base_url,
+        timeout=60,  # 请求超时 60 秒
+        max_retries=2,  # 最多重试 2 次
     )
 
 

@@ -48,7 +48,7 @@ from memory.embedder import (
 )
 
 
-def save_conversation_with_memory(user_msg: str, assistant_msg: str) -> None:
+def save_conversation_with_memory(user_msg: str, assistant_msg: str, verbose: bool = False) -> None:
     """
     保存对话到记忆系统。
     
@@ -60,11 +60,12 @@ def save_conversation_with_memory(user_msg: str, assistant_msg: str) -> None:
     Args:
         user_msg: 用户消息
         assistant_msg: 助手回复
+        verbose: 是否打印日志（后台线程应设为 False）
     """
     stm = get_short_term_memory()
     
     # 添加到短期记忆，返回被淘汰的记忆（如果有）
-    evicted = stm.add(user_msg, assistant_msg)
+    evicted = stm.add(user_msg, assistant_msg, verbose=verbose)
     
     # 如果有被淘汰的记忆，将其向量化后移入长期记忆
     if evicted:
@@ -195,16 +196,17 @@ __all__ = [
     "get_long_term_memory",
     "save_conversation_with_memory",
     "build_context_with_memory",
+    "build_context_with_memory_detailed",
     "get_memory_stats",
     "clear_all_memory",
     "save_conversation",
     "get_recent_full_memories",
     "get_recent_summary_memories",
     "format_short_term_for_prompt",
-    "format_long_term_for_prompt",
     "get_short_term_stats",
     "add_to_long_term",
     "search_long_term",
+    "format_long_term_for_prompt",
     "get_embedder",
     "embed_text",
     "embed_texts",

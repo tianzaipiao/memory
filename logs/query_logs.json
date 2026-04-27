@@ -112,5 +112,390 @@
       }
     ],
     "vector_memory_count": 5
+  },
+  {
+    "timestamp": "2026-04-23T21:32:26.706386",
+    "session_id": "default",
+    "step_count": 0,
+    "user_input": "还记得我们上次聊过什么吗？",
+    "user_input_length": 13,
+    "vector_memories": [
+      {
+        "timestamp": "2026-04-23 13:11",
+        "text": "用户询问之前的对话内容，我回顾了工具能力讨论（纯记忆架构，无外部工具调用，提供三种技术方向建议）和天气信息测试（确认无法联网查询），并提及更早的记忆系统设计讨论。",
+        "score": 0.9129987359046936
+      },
+      {
+        "timestamp": "2026-04-16 15:57",
+        "text": "用户询问: 还记得我们上次聊过什么吗？...",
+        "score": 0.8283721208572388
+      },
+      {
+        "timestamp": "2026-04-22 12:01",
+        "text": "用户询问: 还记得我们上次聊过什么吗？...",
+        "score": 0.8283721208572388
+      },
+      {
+        "timestamp": "2026-04-23 11:59",
+        "text": "用户询问: hello...",
+        "score": 0.637018084526062
+      },
+      {
+        "timestamp": "2026-04-23 11:59",
+        "text": "用户询问: hello...",
+        "score": 0.637018084526062
+      }
+    ],
+    "vector_memory_count": 5
+  },
+  {
+    "timestamp": "2026-04-27T10:41:27.356134",
+    "session_id": "default",
+    "step_count": 0,
+    "user_input": "还记得我们上次聊过什么吗？",
+    "user_input_length": 13,
+    "vector_memories": [
+      {
+        "timestamp": "2026-04-16 15:57",
+        "content": "用户询问: 还记得我们上次聊过什么吗？...",
+        "similarity": 0.69
+      },
+      {
+        "timestamp": "2026-04-22 12:01",
+        "content": "用户询问: 还记得我们上次聊过什么吗？...",
+        "similarity": 0.69
+      },
+      {
+        "timestamp": "2026-04-23 10:28",
+        "content": "用户询问: hello，你好啊...",
+        "similarity": 0.6
+      },
+      {
+        "timestamp": "2026-04-23 11:59",
+        "content": "用户询问: hello...",
+        "similarity": 0.57
+      },
+      {
+        "timestamp": "2026-04-23 11:59",
+        "content": "用户询问: hello...",
+        "similarity": 0.57
+      }
+    ],
+    "vector_memory_count": 5
+  },
+  {
+    "timestamp": "2026-04-27T10:56:57.455472",
+    "session_id": "default",
+    "step_count": 0,
+    "user_input": "MCP协议工具是自己写吗，还是网上提供的可供拉取？",
+    "user_input_length": 25,
+    "vector_memories": [
+      {
+        "timestamp": "2026-04-20 15:22",
+        "content": "用户询问: 我想把system prompt拆解为四部分，分别为system prompt，rules，toollist，Userprompt。你认为这样如何，如何组织这四个的加载顺序比较合理？...",
+        "similarity": 0.44
+      },
+      {
+        "timestamp": "2026-04-23 11:59",
+        "content": "用户询问: hello...",
+        "similarity": 0.43
+      },
+      {
+        "timestamp": "2026-04-23 11:59",
+        "content": "用户询问: hello...",
+        "similarity": 0.43
+      },
+      {
+        "timestamp": "2026-04-23 10:28",
+        "content": "用户询问: hello，你好啊...",
+        "similarity": 0.42
+      },
+      {
+        "timestamp": "2026-04-23 12:07",
+        "content": "用户询问可用工具，我明确告知无外部工具但具备记忆检索和推理能力，详细列出已启用能力（长期记忆检索、短期记忆访问、推理生成）和未启用限制（无联网、API调用、代码执行），结果清晰界定了能力边界。",
+        "similarity": 0.41
+      }
+    ],
+    "vector_memory_count": 5
+  },
+  {
+    "timestamp": "2026-04-27T14:36:18.767105",
+    "session_id": "default",
+    "step_count": 0,
+    "user_input": "MCP协议出现的背景？为什么大家会考虑使用MCP协议",
+    "user_input_length": 26,
+    "vector_memories": [
+      {
+        "timestamp": "2026-04-23 13:34",
+        "content": "用户输入\"hi\"可能是在测试响应模式稳定性、上下文切换能力和记忆系统负载，我采用了简洁友好+主动引导策略，提供三种测试方向（记忆连贯性、上下文边界、日常对话），主动询问是否验证系统鲁棒性，成功识别测试意图并给出相应回应。",
+        "similarity": 0.45
+      },
+      {
+        "timestamp": "2026-04-16 17:22",
+        "content": "用户询问其记忆系统是否是主流方式，助手确认分层记忆系统（短期内存+中期摘要+长期向量）是当前最主流的AI记忆架构，详细对比了三种方案并解释了分层混合方案在成本效率平衡上的优势，确认用户方案处于主流核心位置。",
+        "similarity": 0.42
+      },
+      {
+        "timestamp": "2026-04-16 14:19",
+        "content": "用户设计分层AI记忆系统（短期5轮全文+中期5轮摘要+长期向量数据库），提供系统设计图和架构细节，助手建议继续技术实现、切换话题、讨论设计问题或接受新任务。",
+        "similarity": 0.42
+      },
+      {
+        "timestamp": "2026-04-22 11:17",
+        "content": "用户请求分析上下文召回策略合理性，当前策略采用5层级召回结构（系统提示词、用户输入、向量库记忆、近期对话、早期摘要）和4个设计参数，分析指出该策略有助于提升任务理解优先级。",
+        "similarity": 0.41
+      },
+      {
+        "timestamp": "2026-04-23 13:27",
+        "content": "用户: 你赶紧状态如何... 助手: Liang，我的状态很好！😊 作为一个AI助手，我始终保持最佳运行状态：\n\n## 🚀 当前系统状态\n\n### ✅ **核心功能正常**\n1. **记忆系统**：工作稳定\n   - 长期记忆向量库检索正常（刚才准确召回了相关历史）\n   - 短期记忆缓冲区完整（最近10轮对话清晰可见）\n   - 上下文组装准确（按优先级整合了所有相关信息）\n\n2. **推理能力**：在线\n   - 能基于你的身份和...",
+        "similarity": 0.4
+      }
+    ],
+    "vector_memory_count": 5
+  },
+  {
+    "timestamp": "2026-04-27T14:42:31.196979",
+    "session_id": "default",
+    "step_count": 0,
+    "user_input": "能不能举一个例子给我看看，我还是不太理解MCP协议在系统中的定位",
+    "user_input_length": 32,
+    "vector_memories": [
+      {
+        "timestamp": "2026-04-23 11:59",
+        "content": "用户询问: hello...",
+        "similarity": 0.45
+      },
+      {
+        "timestamp": "2026-04-23 11:59",
+        "content": "用户询问: hello...",
+        "similarity": 0.45
+      },
+      {
+        "timestamp": "2026-04-23 10:28",
+        "content": "用户询问: hello，你好啊...",
+        "similarity": 0.44
+      },
+      {
+        "timestamp": "2026-04-23 13:28",
+        "content": "用户询问: 你赶紧状态如何...",
+        "similarity": 0.43
+      },
+      {
+        "timestamp": "2026-04-23 13:34",
+        "content": "用户输入\"hi\"可能是在测试响应模式稳定性、上下文切换能力和记忆系统负载，我采用了简洁友好+主动引导策略，提供三种测试方向（记忆连贯性、上下文边界、日常对话），主动询问是否验证系统鲁棒性，成功识别测试意图并给出相应回应。",
+        "similarity": 0.43
+      }
+    ],
+    "vector_memory_count": 5
+  },
+  {
+    "timestamp": "2026-04-27T14:56:14.405518",
+    "session_id": "default",
+    "step_count": 0,
+    "user_input": "能不能举一个例子给我看看，我还是不太理解MCP协议在系统中的定位",
+    "user_input_length": 32,
+    "vector_memories": [
+      {
+        "timestamp": "2026-04-23 11:59",
+        "content": "用户询问: hello...",
+        "similarity": 0.44
+      },
+      {
+        "timestamp": "2026-04-23 11:59",
+        "content": "用户询问: hello...",
+        "similarity": 0.44
+      },
+      {
+        "timestamp": "2026-04-20 15:22",
+        "content": "用户询问: 我想把system prompt拆解为四部分，分别为system prompt，rules，toollist，Userprompt。你认为这样如何，如何组织这四个的加载顺序比较合理？...",
+        "similarity": 0.44
+      },
+      {
+        "timestamp": "2026-04-23 10:28",
+        "content": "用户询问: hello，你好啊...",
+        "similarity": 0.42
+      },
+      {
+        "timestamp": "2026-04-23 13:28",
+        "content": "用户询问: 你赶紧状态如何...",
+        "similarity": 0.42
+      }
+    ],
+    "vector_memory_count": 5
+  },
+  {
+    "timestamp": "2026-04-27T15:05:04.956084",
+    "session_id": "default",
+    "step_count": 0,
+    "user_input": "感觉你的解释还是不够直观，能不能更通俗的向我解释一下",
+    "user_input_length": 26,
+    "vector_memories": [
+      {
+        "timestamp": "2026-04-23 11:59",
+        "content": "用户询问: hello...",
+        "similarity": 0.6
+      },
+      {
+        "timestamp": "2026-04-23 11:59",
+        "content": "用户询问: hello...",
+        "similarity": 0.6
+      },
+      {
+        "timestamp": "2026-04-23 10:28",
+        "content": "用户询问: hello，你好啊...",
+        "similarity": 0.6
+      },
+      {
+        "timestamp": "2026-04-20 15:42",
+        "content": "用户询问为什么上一条回答被截断，但我的回复仅重复了用户问题而未提供解释，表明系统可能存在输出截断问题，且我未能有效解决用户疑问。",
+        "similarity": 0.56
+      },
+      {
+        "timestamp": "2026-04-23 13:28",
+        "content": "用户询问: 你赶紧状态如何...",
+        "similarity": 0.53
+      }
+    ],
+    "vector_memory_count": 5
+  },
+  {
+    "timestamp": "2026-04-27T16:08:01.861089",
+    "session_id": "default",
+    "step_count": 0,
+    "user_input": "那是不是可以理解，自己写的Python小程序，可以通过定义tool调用，也可以通过写一个MCP server调用？",
+    "user_input_length": 57,
+    "vector_memories": [
+      {
+        "timestamp": "2026-04-23 17:05",
+        "content": "用户输入\"1\"进行测试，助手回复确认了用户是构建个人AI记忆系统的Python/LangGraph开发者，当前讨论AI Agent的skills与tools使用时机，确认系统为纯记忆架构支持内置推理但不支持外部工具，可继续提供技术讨论和架构设计建议。",
+        "similarity": 0.5
+      },
+      {
+        "timestamp": "2026-04-23 10:49",
+        "content": "用户要求总结当前工作，回复指出其正基于Python和LangGraph开发具备长期记忆能力的AI对话系统，处于系统优化与测试阶段，已设计分层上下文召回策略（得分7.5/10）并识别出输出截断问题。",
+        "similarity": 0.44
+      },
+      {
+        "timestamp": "2026-04-23 12:07",
+        "content": "用户询问可用工具，我明确告知无外部工具但具备记忆检索和推理能力，详细列出已启用能力（长期记忆检索、短期记忆访问、推理生成）和未启用限制（无联网、API调用、代码执行），结果清晰界定了能力边界。",
+        "similarity": 0.43
+      },
+      {
+        "timestamp": "2026-04-20 17:37",
+        "content": "用户询问了自己的身份和权限，助手回复了Liang是系统开发者/管理员，具备Python和LangGraph技术背景，并处于系统优化测试期，关注上下文平衡、System Prompt优化等，但回复被截断，权限信息未完整显示。",
+        "similarity": 0.42
+      },
+      {
+        "timestamp": "2026-04-16 14:19",
+        "content": "用户询问: [作为全文存入短期记忆] ← memory.json (最多10条)...",
+        "similarity": 0.42
+      }
+    ],
+    "vector_memory_count": 5
+  },
+  {
+    "timestamp": "2026-04-27T16:16:23.345056",
+    "session_id": "default",
+    "step_count": 0,
+    "user_input": "也就是说，我如果把这个Python放在后端提供给用户使用，选择mcp；如果我直接把Python程序写在本地，则完全可以使用tool。我的理解正确吗",
+    "user_input_length": 73,
+    "vector_memories": [
+      {
+        "timestamp": "2026-04-23 17:05",
+        "content": "用户询问: 一般来说，什么时候让Agent使用skills，什么时候让Agent使用tool呢？...",
+        "similarity": 0.44
+      },
+      {
+        "timestamp": "2026-04-23 17:05",
+        "content": "用户输入\"1\"进行测试，助手回复确认了用户是构建个人AI记忆系统的Python/LangGraph开发者，当前讨论AI Agent的skills与tools使用时机，确认系统为纯记忆架构支持内置推理但不支持外部工具，可继续提供技术讨论和架构设计建议。",
+        "similarity": 0.44
+      },
+      {
+        "timestamp": "2026-04-20 15:22",
+        "content": "用户询问: 我想把system prompt拆解为四部分，分别为system prompt，rules，toollist，Userprompt。你认为这样如何，如何组织这四个的加载顺序比较合理？...",
+        "similarity": 0.41
+      },
+      {
+        "timestamp": "2026-04-23 17:03",
+        "content": "用户询问AI Agent架构中何时使用skills和tools的区别，助手开始区分了两种概念并提供代码示例，但回复被截断未给出完整的使用时机建议。",
+        "similarity": 0.4
+      },
+      {
+        "timestamp": "2026-04-14 14:14",
+        "content": "用户请求为32G内存、使用Ollama的本地RAG知识库提供优化方案，针对硬盘存储向量数据不想全加载的需求，建议使用Chroma/FAISS/Weaviate向量数据库，实施量化压缩、分块加载、LRU缓存等内存优化策略，并推荐小型嵌入模型和懒加载架构。",
+        "similarity": 0.39
+      }
+    ],
+    "vector_memory_count": 5
+  },
+  {
+    "timestamp": "2026-04-27T16:33:40.945281",
+    "session_id": "default",
+    "step_count": 0,
+    "user_input": "那么我该如何告诉AI我有哪些mcp服务呢？通过在上下文prompt中注明吗？",
+    "user_input_length": 38,
+    "vector_memories": [
+      {
+        "timestamp": "2026-04-20 15:22",
+        "content": "用户询问: 我想把system prompt拆解为四部分，分别为system prompt，rules，toollist，Userprompt。你认为这样如何，如何组织这四个的加载顺序比较合理？...",
+        "similarity": 0.56
+      },
+      {
+        "timestamp": "2026-04-23 11:59",
+        "content": "用户询问: hello...",
+        "similarity": 0.5
+      },
+      {
+        "timestamp": "2026-04-23 11:59",
+        "content": "用户询问: hello...",
+        "similarity": 0.5
+      },
+      {
+        "timestamp": "2026-04-20 17:16",
+        "content": "用户询问上次对话内容，助手回顾了系统优化和技术配置议题，包括输出截断问题（提供动态截断和记忆数量调整解决方案）和System Prompt拆解（推荐两种加载顺序方案：System→Rules→ToolList→UserPrompt→记忆组件，或System→UserPrompt→Rules→ToolList→记忆组件）。",
+        "similarity": 0.5
+      },
+      {
+        "timestamp": "2026-04-23 10:28",
+        "content": "用户询问: hello，你好啊...",
+        "similarity": 0.48
+      }
+    ],
+    "vector_memory_count": 5
+  },
+  {
+    "timestamp": "2026-04-27T16:58:57.147129",
+    "session_id": "default",
+    "step_count": 0,
+    "user_input": "不知道你是否了解openclaw这个Agent框架。在实际使用过程中，我只需要在控制台向他说明“帮我安装www.xxxxx.com这个skills“，他就能自动帮我安装，并在下次需要使用时自动调用。这是一个怎样的过程，是和你上面说的一致吗？",
+    "user_input_length": 120,
+    "vector_memories": [
+      {
+        "timestamp": "2026-04-23 21:37",
+        "content": "用户询问安装skills是否麻烦，助手说明布布不支持动态安装新技能，需要修改架构并集成LangGraph框架；同时提供了为AI记忆系统添加skills的方案，基于提示工程实现纯Skills架构。",
+        "similarity": 0.58
+      },
+      {
+        "timestamp": "2026-04-23 17:05",
+        "content": "用户询问: 一般来说，什么时候让Agent使用skills，什么时候让Agent使用tool呢？...",
+        "similarity": 0.57
+      },
+      {
+        "timestamp": "2026-04-27 10:41",
+        "content": "用户询问上次对话内容，助手总结了AI Agent中skills和tools的区别及安装使用问题，提供了能力背景，并提供了继续讨论的选项。",
+        "similarity": 0.52
+      },
+      {
+        "timestamp": "2026-04-23 16:59",
+        "content": "用户询问是否支持skills技能，我详细列出了已具备的三大核心技能（记忆管理、推理与生成、对话管理）和不支持的外部技能（无工具调用、无代码执行、无实时数据获取），明确了支持范围。",
+        "similarity": 0.49
+      },
+      {
+        "timestamp": "2026-04-23 17:03",
+        "content": "用户询问AI Agent架构中何时使用skills和tools的区别，助手开始区分了两种概念并提供代码示例，但回复被截断未给出完整的使用时机建议。",
+        "similarity": 0.49
+      }
+    ],
+    "vector_memory_count": 5
   }
 ]
